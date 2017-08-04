@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankPlayerController.h"
+#include "Tank.h"
+#include "DrawDebugHelpers.h"
 
 
 void ATankPlayerController::BeginPlay()
@@ -32,27 +34,37 @@ void ATankPlayerController::AimTowardsCrosshair()
 {
 	if (!ControlledTank) { return; }
 	FVector CrosshairHitLocation;
-	if (GetSightRayHitLocation(CrosshairHitLocation))
+	FVector CameraLookDirection;
+	if (GetSightRayHitLocation(CrosshairHitLocation, CameraLookDirection))
 	{
-		
+		//UE_LOG(LogTemp, Warning, TEXT("Camera rotation: %s"), *(CameraLookDirection.Rotation() - GetPawn()->GetActorRotation()).ToString());
+		if ((CameraLookDirection.Rotation() - GetPawn()->GetActorRotation()).Pitch < -20)
+		{
+			GetControlledTank()->AimTowards(CameraLookDirection.Rotation());
+			return;
+		}
+		//UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *CrosshairHitLocation.ToString());
+		DrawDebugSphere(GetWorld(), CrosshairHitLocation, 10, 30, FColor(255, 0, 0));
+		GetControlledTank()->AimAt(CrosshairHitLocation);
+	}
+	else
+	{
+		GetControlledTank()->AimTowards(CameraLookDirection.Rotation());
 	}
 }
 
-bool ATankPlayerController::GetSightRayHitLocation(FVector & OutHitLocation)
+bool ATankPlayerController::GetSightRayHitLocation(FVector & OutHitLocation, FVector& OutLookDirection)
 {
-	FVector LookDirection;
+	//LookDirection;
 	FVector WorldPosition;
-	if (GetLookDirection(WorldPosition, LookDirection))
+	if (GetLookDirection(WorldPosition, OutLookDirection))
 	{
-		FVector HitLocation;
-		if (GetLineTraceHitLocation(WorldPosition, LookDirection, HitLocation))
-		{
-			GetControlledTank()->AimAt(HitLocation);
-		}
+		//FVector HitLocation;
+		return GetLineTraceHitLocation(WorldPosition, OutLookDirection, OutHitLocation);
 	}
-	OutHitLocation = FVector(1, 2, 3);
+	//OutHitLocation = FVector(1, 2, 3);
 	//UE_LOG(LogTemp, Warning, TEXT("Camera dir: %s"), *CameraDirection.ToString());
-	return true;
+	return false;
 }
 
 bool ATankPlayerController::GetLookDirection(FVector& OutCameraPosition, FVector& OutCameraDirection)// Gets the direction the camera is pointing at (as a vector)
@@ -86,7 +98,8 @@ bool ATankPlayerController::GetLookDirection(FVector& OutCameraPosition, FVector
 bool ATankPlayerController::GetLineTraceHitLocation(FVector Start, FVector Direction, FVector & OutHitLocation)
 {
 	FCollisionQueryParams QueryParams = FCollisionQueryParams(
-		FName(), false, GetPawn());
+		FName(), false, GetOwner());
+	QueryParams.AddIgnoredActor(GetPawn());
 
 	FHitResult Hit;
 	if (GetWorld()->LineTraceSingleByChannel(Hit,
@@ -96,6 +109,7 @@ bool ATankPlayerController::GetLineTraceHitLocation(FVector Start, FVector Direc
 		QueryParams))
 	{
 		OutHitLocation = Hit.ImpactPoint;
+		
 		return true;
 	}
 	return false;

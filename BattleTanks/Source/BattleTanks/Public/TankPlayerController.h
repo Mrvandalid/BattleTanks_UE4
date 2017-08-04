@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Tank.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 //#include "GameFramework/Actor.h"
 #include "TankPlayerController.generated.h"
 
+class ATank;
 /**
  * 
  */
@@ -38,7 +38,7 @@ private:// Helper functions
 	void AimTowardsCrosshair();
 
 	//True if crosshair trace hits something, and "returns" the location as an out parameter
-	bool GetSightRayHitLocation(FVector & OutHitLocation);
+	bool GetSightRayHitLocation(FVector & OutHitLocation, FVector& OutLookDirection);
 
 	bool GetLookDirection(FVector& OutCameraPosition, FVector& OutCameraDirection);
 

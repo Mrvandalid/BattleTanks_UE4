@@ -1,7 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankAimingComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
+#include "DrawDebugHelpers.h"
 #include "TankBarrel.h"
+#include "TankTurret.h"
 
 
 // Sets default values for this component's properties
@@ -38,7 +43,6 @@ void UTankAimingComponent::AimAt(FVector Target, float LaunchSpeed)
 	if (!Barrel) { return; }
 
 	FVector NozzlePosition = GetBarrelNozzleLocation();
-	DrawDebugPoint(GetWorld(), NozzlePosition, 50, FColor(255, 0, 0));
 
 	//TArray<AActor*> empty;
 
@@ -49,16 +53,29 @@ void UTankAimingComponent::AimAt(FVector Target, float LaunchSpeed)
 		NozzlePosition,
 		Target,
 		LaunchSpeed,
+		false,
 		15,
+		false,
 		ESuggestProjVelocityTraceOption::DoNotTrace
 	);
-
+	float TimeDelta = GetWorld()->GetTimeSeconds();
 	if (FoundVelocityVector)
 	{
 		ProjectileVelocity = ProjectileVelocity.GetSafeNormal();
-
-		UE_LOG(LogTemp, Warning, TEXT("Launch speed: %f"), LaunchSpeed);
+		MoveBarrelTowards(ProjectileVelocity);
+		//UE_LOG(LogTemp, Warning, TEXT("%f found aim direction: %s"), TimeDelta, *ProjectileVelocity.ToString());
 	}
+	/*else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%f did not find aim direction: %s"), TimeDelta, *ProjectileVelocity.ToString());
+	}*/
+}
+
+void UTankAimingComponent::AimTowards(FRotator Direction, float LaunchSpeed)
+{
+	if (!Barrel) { return; }
+	Barrel->ElevateBarrel(Direction.Pitch);
+	Turret->RotateTurret(Direction.Yaw);
 }
 
 FVector UTankAimingComponent::GetBarrelNozzleLocation()
@@ -66,37 +83,40 @@ FVector UTankAimingComponent::GetBarrelNozzleLocation()
 	if (!Barrel) { return FVector(0); }
 
 	return Barrel->GetSocketLocation(FName("Projectile"));
-	FRotator BarrelRotation = Barrel->GetComponentRotation();
+	//FRotator BarrelRotation = Barrel->GetComponentRotation();
 
-	FVector BarrelPosition;
-	BarrelPosition = Barrel->GetComponentLocation();
+	//FVector BarrelPosition;
+	//BarrelPosition = Barrel->GetComponentLocation();
 
-	FVector BarrelLength;
-	FVector useless;
-	Barrel->GetLocalBounds(useless, BarrelLength);
-	BarrelLength = FVector(BarrelLength.X, 0, 0);
+	//FVector BarrelLength;
+	//FVector useless;
+	//Barrel->GetLocalBounds(useless, BarrelLength);
+	//BarrelLength = FVector(BarrelLength.X, 0, 0);
 
-	BarrelLength = BarrelRotation.RotateVector(BarrelLength);
+	//BarrelLength = BarrelRotation.RotateVector(BarrelLength);
 
-	FVector BarrelNozzlePosition = BarrelPosition + BarrelLength;
+	//FVector BarrelNozzlePosition = BarrelPosition + BarrelLength;
 
-	//DrawDebugSphere(GetWorld(), BarrelNozzlePosition, 50, 10, FColor(255, 0, 0));
-	//UE_LOG(LogTemp, Warning, TEXT("Barrel nozzle position: %s"), *BarrelNozzlePosition.ToString());
-	return BarrelNozzlePosition;
+	////DrawDebugSphere(GetWorld(), BarrelNozzlePosition, 50, 10, FColor(255, 0, 0));
+	////UE_LOG(LogTemp, Warning, TEXT("Barrel nozzle position: %s"), *BarrelNozzlePosition.ToString());
+	//return BarrelNozzlePosition;
 }
 
 void UTankAimingComponent::MoveBarrelTowards(FVector Direction)
 {
-	// Calculate the Turret Yaw and barrel Pitch by Direction
-	FRotator BarrelRotation = Barrel->GetComponentRotation();
 	FRotator DirectionRotator = Direction.Rotation();
-	FRotator DeltaRotator = BarrelRotation - DirectionRotator;
 
-	Barrel->ElevateBarrel(5);
+	Barrel->ElevateBarrel(DirectionRotator.Pitch);
+	Turret->RotateTurret(DirectionRotator.Yaw);
 }
 
 void UTankAimingComponent::SetBarrel(UTankBarrel* BarrelToSet)
 {
 	Barrel = BarrelToSet;
+}
+
+void UTankAimingComponent::SetTurret(UTankTurret* TurretToSet)
+{
+	Turret = TurretToSet;
 }
 
