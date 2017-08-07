@@ -25,11 +25,11 @@ public:
 	ATank* GetControlledTank() const;// The tank instance this controller is possessing
 
 private:// Variables
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 		float CrosshairXPosistion = 0.5f;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 		float CrosshairYPosistion = 0.33333f;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 		float TraceRange = 150000;
 
 private:// Helper functions

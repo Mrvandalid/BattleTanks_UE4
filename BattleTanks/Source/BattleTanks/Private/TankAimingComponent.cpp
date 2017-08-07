@@ -83,23 +83,6 @@ FVector UTankAimingComponent::GetBarrelNozzleLocation()
 	if (!Barrel) { return FVector(0); }
 
 	return Barrel->GetSocketLocation(FName("Projectile"));
-	//FRotator BarrelRotation = Barrel->GetComponentRotation();
-
-	//FVector BarrelPosition;
-	//BarrelPosition = Barrel->GetComponentLocation();
-
-	//FVector BarrelLength;
-	//FVector useless;
-	//Barrel->GetLocalBounds(useless, BarrelLength);
-	//BarrelLength = FVector(BarrelLength.X, 0, 0);
-
-	//BarrelLength = BarrelRotation.RotateVector(BarrelLength);
-
-	//FVector BarrelNozzlePosition = BarrelPosition + BarrelLength;
-
-	////DrawDebugSphere(GetWorld(), BarrelNozzlePosition, 50, 10, FColor(255, 0, 0));
-	////UE_LOG(LogTemp, Warning, TEXT("Barrel nozzle position: %s"), *BarrelNozzlePosition.ToString());
-	//return BarrelNozzlePosition;
 }
 
 void UTankAimingComponent::MoveBarrelTowards(FVector Direction)
