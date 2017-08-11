@@ -20,13 +20,18 @@ ATank::ATank()
 
 void ATank::AimAt(FVector Target) const
 {
-	if (!SetActive) { return; }
+	if (!IsActive) { return; }
 	AimingComponent->AimAt(Target, LaunchSpeed);
 }
 
 void ATank::AimTowards(FRotator Direction) const
 {
 	AimingComponent->AimTowards(Direction, LaunchSpeed);
+}
+
+bool ATank::GetIsActive() const
+{
+	return IsActive;
 }
 
 void ATank::SetBarrel(UTankBarrel* BarrelToSet) 

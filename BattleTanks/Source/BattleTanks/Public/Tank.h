@@ -24,6 +24,8 @@ public:
 
 	void AimTowards(FRotator Direction) const;
 
+	bool GetIsActive() const;
+
 	UFUNCTION(BlueprintCallable, Category = Setup)
 		void SetBarrel(UTankBarrel *BarrelToSet);
 
@@ -56,7 +58,7 @@ private:
 
 
 	UPROPERTY(EditAnywhere)
-		bool SetActive = true;
+		bool IsActive = true;
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
 		float LaunchSpeed = 100000; // Cm per second = 1000 m/s

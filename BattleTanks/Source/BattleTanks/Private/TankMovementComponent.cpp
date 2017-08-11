@@ -22,3 +22,19 @@ void UTankMovementComponent::IntendTurnRight(float Throw)
 	LeftTrack->SetThrottle(Throw);
 	RightTrack->SetThrottle(-Throw);
 }
+
+void UTankMovementComponent::RequestDirectMove(const FVector& Direction, bool ForceMaxSpeed)
+{
+	//UE_LOG(LogTemp, Warning, TEXT("%s moving to %s"), *GetOwner()->GetName(), *Direction.ToString());
+	FVector DesiredDirection = Direction.GetSafeNormal();
+	FVector CurrentDirection = GetOwner()->GetActorForwardVector().GetSafeNormal();
+	FVector CurrentRightDirection = GetOwner()->GetActorRightVector().GetSafeNormal();
+
+	float ForwardThrow = FVector::DotProduct(CurrentDirection, DesiredDirection);
+	float TurnRightThrow = FMath::Sign(FVector::DotProduct(CurrentRightDirection, DesiredDirection));
+
+	IntendMoveForward(ForwardThrow);
+	IntendTurnRight(TurnRightThrow);
+
+	UE_LOG(LogTemp, Warning, TEXT("Turn throw: %f"), TurnRightThrow);
+}

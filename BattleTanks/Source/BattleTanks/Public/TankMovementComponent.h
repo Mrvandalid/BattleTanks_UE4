@@ -26,6 +26,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
 		void IntendTurnRight(float Throw);
+
+	virtual void RequestDirectMove(const FVector& Direction, bool ForceMaxSpeed) override;
 		
 private:
 
