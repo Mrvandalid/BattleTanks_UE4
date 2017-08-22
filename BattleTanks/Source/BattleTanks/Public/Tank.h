@@ -20,20 +20,15 @@ public:
 	// Sets default values for this pawn's properties
 	ATank();
 
-	void AimAt(FVector Target) const;
+	/*void AimAt(FVector Target) const;
 
-	void AimTowards(FRotator Direction) const;
+	void AimTowards(FRotator Direction) const;*/
 
 	////Get the aiming component of this tank.
 	//UFUNCTION(BlueprintCallable, Category = "Setup")
 	//UTankAimingComponent* GetAimingComponent() const;
 
 	bool GetIsActive() const;
-
-	float GetLaunchSpeed() const;
-
-	UFUNCTION(BlueprintCallable, Category = Gameplay)
-		void Fire();
 
 protected:
 	// Called when the game starts or when spawned
@@ -50,15 +45,5 @@ private:
 	UPROPERTY(EditAnywhere)
 		bool IsActive = true;
 
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
-		float LaunchSpeed = 100000; // Cm per second = 1000 m/s
-
-	UPROPERTY(EditDefaultsOnly, Category = Setup)
-		TSubclassOf<AProjectile> ProjectileBlueprint;
-
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
-		float ReloatTime = 3;
-
-	double LastFireTime = 0;
 
 };

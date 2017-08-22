@@ -1,8 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "TankPlayerController.h"
-#include "Tank.h"
-#include "DrawDebugHelpers.h"
 #include "TankAimingComponent.h"
 
 
@@ -14,7 +12,7 @@ ATankPlayerController::ATankPlayerController()
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	AimingComponent = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
+	AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 	if (AimingComponent)
 	{
 		FoundAimingComponent(AimingComponent);
@@ -31,14 +29,10 @@ void ATankPlayerController::Tick(float DeltaTime)
 	AimTowardsCrosshair();
 }
 
-ATank* ATankPlayerController::GetControlledTank() const
-{
-	return Cast<ATank>(GetPawn());
-}
 
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	if (!ControlledTank) { return; }
+	if (!ensure(AimingComponent)) { return; }
 	FVector CrosshairHitLocation;
 	FVector CameraLookDirection;
 	if (GetSightRayHitLocation(CrosshairHitLocation, CameraLookDirection))
@@ -49,13 +43,11 @@ void ATankPlayerController::AimTowardsCrosshair()
 			AimingComponent->AimTowards(CameraLookDirection.Rotation());
 			return;
 		}
-		//UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *CrosshairHitLocation.ToString());
-		DrawDebugSphere(GetWorld(), CrosshairHitLocation, 10, 30, FColor(255, 0, 0));
-		GetControlledTank()->AimAt(CrosshairHitLocation);
+		AimingComponent->AimAt(CrosshairHitLocation);
 	}
 	else
 	{
-		GetControlledTank()->AimTowards(CameraLookDirection.Rotation());
+		AimingComponent->AimTowards(CameraLookDirection.Rotation());
 	}
 }
 

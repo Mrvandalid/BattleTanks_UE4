@@ -11,8 +11,8 @@ void UTankTrack::SetThrottle(float Throttle)
 	FVector ForceVector = GetForwardVector() * TrackMaxForce * Throttle;
 	FVector ForceLocation = GetComponentLocation();
 
-	auto TankRoot = Cast<UStaticMeshComponent>(GetAttachmentRoot());
-	//UE_LOG(LogTemp, Warning, TEXT("Attachment root: %s"), *TankRoot->GetName());
+	auto TankRoot = Cast<UPrimitiveComponent>(GetAttachmentRoot());
+	//UE_LOG(LogTemp, Warning, TEXT("Throttle: %f"), Throttle);
 
 	TankRoot->AddForceAtLocation(ForceVector, ForceLocation);
 }

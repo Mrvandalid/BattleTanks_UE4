@@ -16,7 +16,7 @@ AProjectile::AProjectile()
 
 void AProjectile::LaunchProjectile(float LaunchSpeed)
 {
-	if (!MovementComponent) { return; }
+	if (ensure(!MovementComponent)) { return; }
 	MovementComponent->Activate();
 	MovementComponent->SetVelocityInLocalSpace(FVector::ForwardVector * LaunchSpeed);
 }

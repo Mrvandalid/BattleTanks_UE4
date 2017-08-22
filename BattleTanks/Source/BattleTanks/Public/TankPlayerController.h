@@ -8,7 +8,7 @@
 //#include "GameFramework/Actor.h"
 #include "TankPlayerController.generated.h"
 
-class ATank;
+
 class UTankAimingComponent;
 /**
  *
@@ -25,9 +25,6 @@ public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-		ATank* GetControlledTank() const;// The tank instance this controller is possessing
-
 protected:// Variables
 	UPROPERTY(EditDefaultsOnly)
 		float CrosshairXPosistion = 0.5f;
@@ -42,7 +39,9 @@ protected:// Variables
 
 private:// Helper functions
 
-	ATank* ControlledTank = nullptr;
+	//ATank* ControlledTank = nullptr;
+
+	UTankAimingComponent* AimingComponent; // The aiming component of the controlled tank
 
 	void AimTowardsCrosshair();
 
@@ -52,7 +51,5 @@ private:// Helper functions
 	bool GetLookDirection(FVector& OutCameraPosition, FVector& OutCameraDirection);
 
 	bool GetLineTraceHitLocation(FVector Start, FVector Direction, FVector& OutHitLocation);
-
-	UTankAimingComponent* AimingComponent = nullptr;
 
 };

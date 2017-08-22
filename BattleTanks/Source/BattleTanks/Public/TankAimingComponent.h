@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "TankAimingComponent.generated.h"
 
+
+
 //Fire status enum
 UENUM()
 enum class EFiringState : uint8
@@ -18,6 +20,7 @@ enum class EFiringState : uint8
 
 class UTankBarrel;
 class UTankTurret;
+class AProjectile;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class BATTLETANKS_API UTankAimingComponent : public UActorComponent
@@ -31,6 +34,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 		void Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
 
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	UFUNCTION(BlueprintCallable, Category = "Gameplay")
+		void AimAt(FVector Target);
+
+	UFUNCTION(BlueprintCallable, Category = Gameplay)
+		void Fire();
+
+	void AimTowards(FRotator Direction);
+
+	FVector GetBarrelNozzleLocation();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -38,18 +54,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 		EFiringState FiringStatus = EFiringState::Reloading;
 
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	UFUNCTION(BlueprintCallable, Category = "Gameplay")
-		void AimAt(FVector Target, float LaunchSpeed);
-
-	void AimTowards(FRotator Direction, float LaunchSpeed);
-	//void SetBarrel(UTankBarrel* BarrelToSet);
-	//void SetTurret(UTankTurret* TurretToSet);
-
-	FVector GetBarrelNozzleLocation();
 
 private:
 	UTankBarrel *Barrel = nullptr;
@@ -57,6 +61,17 @@ private:
 
 	void MoveBarrelTowards(FVector Direction);
 
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+		float LaunchSpeed = 100000; // Cm per second = 1000 m/s
+
+
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+		TSubclassOf<AProjectile> ProjectileBlueprint;
+
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+		float ReloatTime = 3;
+
+	double LastFireTime = 0;
 
 
 };

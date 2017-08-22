@@ -7,6 +7,11 @@
 #include "../Public/TankAIController.h"
 
 
+ATankAIController::ATankAIController()
+{
+	PrimaryActorTick.bCanEverTick = true;
+}
+
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -17,21 +22,20 @@ void ATankAIController::BeginPlay()
 void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	ATank* ThisTank = Cast<ATank>(GetPawn());
-	if (!ThisTank->GetIsActive()) { return; }
 
+	//UE_LOG(LogTemp, Warning, TEXT("AI Tick"));
+	UTankAimingComponent* ThisTankAimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 	ATank* PlayerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	
 
-	if (!ThisTank || !PlayerTank) { return; }
+	if (!ensure(ThisTankAimingComponent && PlayerTank)) { return; }
+
+	//if (!ThisTank->GetIsActive()) { return; } //TODO fix IsActive functionality
 
 	MoveToActor(PlayerTank, AcceptanceRadius);
 
-	float LaunchSpeed = ThisTank->GetLaunchSpeed();
+	ThisTankAimingComponent->AimAt(PlayerTank->GetActorLocation());
 
-	ThisTank->AimAt(PlayerTank->GetActorLocation());
-
-	ThisTank->Fire();
+	//ThisTankAimingComponent->Fire(); //TODO refactor Fire() from tank to aimingcomponent
 }
 
 

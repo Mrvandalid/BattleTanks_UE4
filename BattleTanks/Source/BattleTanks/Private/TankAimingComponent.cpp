@@ -4,7 +4,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
-//#include "DrawDebugHelpers.h"
+#include "Projectile.h"
 #include "TankBarrel.h"
 #include "TankTurret.h"
 
@@ -31,7 +31,7 @@ void UTankAimingComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	UE_LOG(LogTemp, Warning, TEXT("Aimingcomponent begin play"));
 
 }
 
@@ -44,9 +44,9 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	// ...
 }
 
-void UTankAimingComponent::AimAt(FVector Target, float LaunchSpeed)
+void UTankAimingComponent::AimAt(FVector Target)
 {
-	if (!Barrel) { return; }
+	if (!ensure(Barrel)) { return; }
 
 	FVector NozzlePosition = GetBarrelNozzleLocation();
 
@@ -77,16 +77,35 @@ void UTankAimingComponent::AimAt(FVector Target, float LaunchSpeed)
 	}*/
 }
 
-void UTankAimingComponent::AimTowards(FRotator Direction, float LaunchSpeed)
+void UTankAimingComponent::Fire()
 {
-	if (!Barrel) { return; }
+	if (!ensure(Barrel && ProjectileBlueprint)) { return; }
+
+	bool isReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloatTime;
+
+	if (Barrel && isReloaded)
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("Found socket: %s"), *Barrel->GetSocketByName(FName("Projectile"))->SocketName.ToString());
+		FVector Location = Barrel->GetSocketLocation(FName("Projectile"));
+		FRotator Rotation = Barrel->GetSocketRotation(FName("Projectile"));
+		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint, Location, Rotation);
+
+		Projectile->LaunchProjectile(LaunchSpeed);
+
+		LastFireTime = FPlatformTime::Seconds();
+	}
+}
+
+void UTankAimingComponent::AimTowards(FRotator Direction)
+{
+	if (!ensure(Barrel) || !ensure(Turret)) { return; }
 	Barrel->ElevateBarrel(Direction.Pitch);
 	Turret->RotateTurret(Direction.Yaw);
 }
 
 FVector UTankAimingComponent::GetBarrelNozzleLocation()
 {
-	if (!Barrel) { return FVector(0); }
+	if (!ensure(Barrel)) { return FVector(0); }
 
 	return Barrel->GetSocketLocation(FName("Projectile"));
 }
