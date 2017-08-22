@@ -3,19 +3,25 @@
 #include "TankPlayerController.h"
 #include "Tank.h"
 #include "DrawDebugHelpers.h"
+#include "TankAimingComponent.h"
 
+
+ATankPlayerController::ATankPlayerController()
+{
+	
+}
 
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	ControlledTank = GetControlledTank();
-	if (ControlledTank)
+	AimingComponent = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
+	if (AimingComponent)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Possessing tank: %s"), *ControlledTank->GetName());
+		FoundAimingComponent(AimingComponent);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("Not in possession of any tank"));
+		UE_LOG(LogTemp, Warning, TEXT("AimingComponent Not found"));
 	}
 }
 
@@ -40,7 +46,7 @@ void ATankPlayerController::AimTowardsCrosshair()
 		//UE_LOG(LogTemp, Warning, TEXT("Camera rotation: %s"), *(CameraLookDirection.Rotation() - GetPawn()->GetActorRotation()).ToString());
 		if ((CameraLookDirection.Rotation() - GetPawn()->GetActorRotation()).Pitch < -20)
 		{
-			GetControlledTank()->AimTowards(CameraLookDirection.Rotation());
+			AimingComponent->AimTowards(CameraLookDirection.Rotation());
 			return;
 		}
 		//UE_LOG(LogTemp, Warning, TEXT("HitLocation: %s"), *CrosshairHitLocation.ToString());

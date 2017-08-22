@@ -24,13 +24,13 @@ public:
 
 	void AimTowards(FRotator Direction) const;
 
+	////Get the aiming component of this tank.
+	//UFUNCTION(BlueprintCallable, Category = "Setup")
+	//UTankAimingComponent* GetAimingComponent() const;
+
 	bool GetIsActive() const;
 
-	UFUNCTION(BlueprintCallable, Category = Setup)
-		void SetBarrel(UTankBarrel *BarrelToSet);
-
-	UFUNCTION(BlueprintCallable, Category = Setup)
-		void SetTurret(UTankTurret* TurretToSet);
+	float GetLaunchSpeed() const;
 
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
 		void Fire();
@@ -39,23 +39,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UTankAimingComponent *AimingComponent = nullptr;
-
-	/*UPROPERTY(BlueprintReadOnly)
-		UTankMovementComponent* MovementComponent = nullptr;*/
-
-	//public:	
-	//	// Called every frame
-	//	virtual void Tick(float DeltaTime) override;
 
 private:
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// Local reference to the barrel. Used to spawn projectiles
 	UTankBarrel* Barrel = nullptr;
 
-
+	//UTankAimingComponent *AimingComponent = nullptr;
 
 	UPROPERTY(EditAnywhere)
 		bool IsActive = true;

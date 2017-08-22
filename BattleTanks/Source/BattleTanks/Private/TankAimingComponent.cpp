@@ -4,7 +4,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
-#include "DrawDebugHelpers.h"
+//#include "DrawDebugHelpers.h"
 #include "TankBarrel.h"
 #include "TankTurret.h"
 
@@ -17,6 +17,12 @@ UTankAimingComponent::UTankAimingComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+}
+
+void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
+{
+	Barrel = BarrelToSet;
+	Turret = TurretToSet;
 }
 
 
@@ -91,15 +97,5 @@ void UTankAimingComponent::MoveBarrelTowards(FVector Direction)
 
 	Barrel->ElevateBarrel(DirectionRotator.Pitch);
 	Turret->RotateTurret(DirectionRotator.Yaw);
-}
-
-void UTankAimingComponent::SetBarrel(UTankBarrel* BarrelToSet)
-{
-	Barrel = BarrelToSet;
-}
-
-void UTankAimingComponent::SetTurret(UTankTurret* TurretToSet)
-{
-	Turret = TurretToSet;
 }
 

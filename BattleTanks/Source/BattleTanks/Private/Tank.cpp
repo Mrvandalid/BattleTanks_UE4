@@ -3,9 +3,9 @@
 #include "Tank.h"
 #include "TankAimingComponent.h"
 #include "Engine/World.h"
-#include "TankBarrel.h"
 #include "Projectile.h"
-#include "TankMovementComponent.h"
+#include "TankBarrel.h"
+#include "GameFramework/PlayerController.h"
 #include "GenericApplication.h"
 
 // Sets default values
@@ -14,36 +14,53 @@ ATank::ATank()
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	AimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));
-	//MovementComponent = CreateDefaultSubobject<UTankMovementComponent>(FName("Movement Component"));
 }
 
 void ATank::AimAt(FVector Target) const
 {
-	if (!IsActive) { return; }
-	AimingComponent->AimAt(Target, LaunchSpeed);
 }
 
 void ATank::AimTowards(FRotator Direction) const
 {
-	AimingComponent->AimTowards(Direction, LaunchSpeed);
 }
+
+//UTankAimingComponent* ATank::GetAimingComponent() const
+//{
+//	/*UTankAimingComponent* AimingComponent = Cast<UTankAimingComponent>(GetComponentByClass(TSubclassOf<UTankAimingComponent>()));
+//	if(!AimingComponent)
+//	{
+//		UE_LOG(LogTemp, Warning, TEXT("AimingComponent not found"));
+//		GetWorld()->GetFirstPlayerController()->ConsoleCommand("quit");
+//	}*/
+//	return nullptr; // AimingComponent;
+//}
+
+//void ATank::AimAt(FVector Target) const
+//{
+//	if (!IsActive) { return; }
+//	AimingComponent->AimAt(Target, LaunchSpeed);
+//}
+//
+//void ATank::AimTowards(FRotator Direction) const
+//{
+//	AimingComponent->AimTowards(Direction, LaunchSpeed);
+//}
 
 bool ATank::GetIsActive() const
 {
 	return IsActive;
 }
 
-void ATank::SetBarrel(UTankBarrel* BarrelToSet) 
-{
-	Barrel = BarrelToSet;
-	AimingComponent->SetBarrel(BarrelToSet);
-}
-
-void ATank::SetTurret(UTankTurret* TurretToSet) 
-{
-	AimingComponent->SetTurret(TurretToSet);
-}
+//void ATank::SetBarrel(UTankBarrel* BarrelToSet)
+//{
+//	Barrel = BarrelToSet;
+//	AimingComponent->SetBarrel(BarrelToSet);
+//}
+//
+//void ATank::SetTurret(UTankTurret* TurretToSet)
+//{
+//	AimingComponent->SetTurret(TurretToSet);
+//}
 
 void ATank::Fire()
 {
@@ -69,15 +86,9 @@ void ATank::BeginPlay()
 	//UE_LOG(LogTemp, Warning, TEXT("Is gamepad connected: %d"), GenericApplication::IsGamepadAttached())
 }
 
-// Called every frame
-//void ATank::Tick(float DeltaTime)
-//{
-//	Super::Tick(DeltaTime);
-//}
-
-// Called to bind functionality to input
-void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+float ATank::GetLaunchSpeed() const
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	return LaunchSpeed;
 }
+
 

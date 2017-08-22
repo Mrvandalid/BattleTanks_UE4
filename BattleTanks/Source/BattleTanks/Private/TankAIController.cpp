@@ -3,6 +3,7 @@
 #include "TankAIController.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
+#include "TankAimingComponent.h"
 #include "../Public/TankAIController.h"
 
 
@@ -25,6 +26,8 @@ void ATankAIController::Tick(float DeltaTime)
 	if (!ThisTank || !PlayerTank) { return; }
 
 	MoveToActor(PlayerTank, AcceptanceRadius);
+
+	float LaunchSpeed = ThisTank->GetLaunchSpeed();
 
 	ThisTank->AimAt(PlayerTank->GetActorLocation());
 

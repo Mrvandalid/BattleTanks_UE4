@@ -36,5 +36,5 @@ void UTankMovementComponent::RequestDirectMove(const FVector& Direction, bool Fo
 	IntendMoveForward(ForwardThrow);
 	IntendTurnRight(TurnRightThrow);
 
-	UE_LOG(LogTemp, Warning, TEXT("Turn throw: %f"), TurnRightThrow);
+	//UE_LOG(LogTemp, Warning, TEXT("Turn throw: %f"), TurnRightThrow);
 }

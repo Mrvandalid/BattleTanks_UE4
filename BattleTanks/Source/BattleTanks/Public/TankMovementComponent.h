@@ -27,9 +27,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Gameplay)
 		void IntendTurnRight(float Throw);
 
-	virtual void RequestDirectMove(const FVector& Direction, bool ForceMaxSpeed) override;
+	
 		
 private:
+	// Override the superclass definition
+	virtual void RequestDirectMove(const FVector& Direction, bool ForceMaxSpeed) override;
 
 	UTankTrack* LeftTrack;
 	UTankTrack* RightTrack;

@@ -9,22 +9,26 @@
 #include "TankPlayerController.generated.h"
 
 class ATank;
+class UTankAimingComponent;
 /**
- * 
+ *
  */
 UCLASS()
 class BATTLETANKS_API ATankPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-	
+
 public:
+
+	ATankPlayerController();
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-	ATank* GetControlledTank() const;// The tank instance this controller is possessing
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+		ATank* GetControlledTank() const;// The tank instance this controller is possessing
 
-private:// Variables
+protected:// Variables
 	UPROPERTY(EditDefaultsOnly)
 		float CrosshairXPosistion = 0.5f;
 	UPROPERTY(EditDefaultsOnly)
@@ -32,7 +36,12 @@ private:// Variables
 	UPROPERTY(EditDefaultsOnly)
 		float TraceRange = 150000;
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Setup")
+		void FoundAimingComponent(UTankAimingComponent* FoundAimingComponent);
+
+
 private:// Helper functions
+
 	ATank* ControlledTank = nullptr;
 
 	void AimTowardsCrosshair();
@@ -43,5 +52,7 @@ private:// Helper functions
 	bool GetLookDirection(FVector& OutCameraPosition, FVector& OutCameraDirection);
 
 	bool GetLineTraceHitLocation(FVector Start, FVector Direction, FVector& OutHitLocation);
-	
+
+	UTankAimingComponent* AimingComponent = nullptr;
+
 };
