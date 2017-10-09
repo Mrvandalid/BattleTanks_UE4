@@ -69,9 +69,11 @@ private:
 		TSubclassOf<AProjectile> ProjectileBlueprint;
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
-		float ReloatTime = 3;
+		float ReloadTime = 3;
 
 	double LastFireTime = 0;
+
+	bool bIsBarrelMoving = true;
 
 
 };

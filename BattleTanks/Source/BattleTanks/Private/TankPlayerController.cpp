@@ -38,11 +38,11 @@ void ATankPlayerController::AimTowardsCrosshair()
 	if (GetSightRayHitLocation(CrosshairHitLocation, CameraLookDirection))
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("Camera rotation: %s"), *(CameraLookDirection.Rotation() - GetPawn()->GetActorRotation()).ToString());
-		if ((CameraLookDirection.Rotation() - GetPawn()->GetActorRotation()).Pitch < -20)
+		/*if ((CameraLookDirection.Rotation() - GetPawn()->GetActorRotation()).Pitch < -20)
 		{
 			AimingComponent->AimTowards(CameraLookDirection.Rotation());
 			return;
-		}
+		}*/
 		AimingComponent->AimAt(CrosshairHitLocation);
 	}
 	else

@@ -17,6 +17,10 @@ class BATTLETANKS_API UTankBarrel : public UStaticMeshComponent
 public:
 	void ElevateBarrel(float Pitch);
 
+	void MatchDirection(FVector Direction);
+
+	void SetNewPitch(float PitchDifference);
+
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = Setup)

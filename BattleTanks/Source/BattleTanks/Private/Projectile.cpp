@@ -16,7 +16,7 @@ AProjectile::AProjectile()
 
 void AProjectile::LaunchProjectile(float LaunchSpeed)
 {
-	if (ensure(!MovementComponent)) { return; }
+	if (!ensure(MovementComponent)) { return; }
 	MovementComponent->Activate();
 	MovementComponent->SetVelocityInLocalSpace(FVector::ForwardVector * LaunchSpeed);
 }
@@ -32,6 +32,5 @@ void AProjectile::BeginPlay()
 void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 

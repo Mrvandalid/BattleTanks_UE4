@@ -23,6 +23,7 @@ void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!Cast<ATank>(GetPawn())->GetIsActive()) { return; }
 	//UE_LOG(LogTemp, Warning, TEXT("AI Tick"));
 	UTankAimingComponent* ThisTankAimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 	ATank* PlayerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
